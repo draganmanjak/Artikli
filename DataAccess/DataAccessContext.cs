@@ -1,0 +1,47 @@
+﻿using DataAccess.Infrastructure.Models;
+using DataAccess.UserManagement.Models;
+using Microsoft.EntityFrameworkCore;
+using System;
+using System.Collections.Generic;
+using System.Text;
+
+
+namespace DataAccess
+{
+    public class DataAccessContext : DbContext
+    {
+        public DbSet<JediniceMjere> JediniceMjere { get; set; }
+        public DbSet<ArtikliModel> Artikli { get; set; }
+        public DbSet<Atributi> Atributi { get; set; }
+
+        public DbSet<AtributiArtikla> AtributiArtikla { get; set; }
+
+        public DbSet<ApplicationUser> Users { get; set; }
+
+        public DataAccessContext(DbContextOptions<DataAccessContext> options) : base(options)
+        {
+         
+        }
+
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+       
+
+            // Artikli i Atributi više na više
+            modelBuilder.Entity<AtributiArtikla>()
+                 .HasKey(a => new { a.PkFkArtikalId, a.PkFkAtributId });
+
+            modelBuilder.Entity<AtributiArtikla>()
+              .HasOne<ArtikliModel>(aa => aa.Artikal)
+              .WithMany(a => a.AtributiArtikla)
+              .HasForeignKey(aa => aa.PkFkArtikalId);
+
+            modelBuilder.Entity<AtributiArtikla>()
+                .HasOne<Atributi>(aa => aa.Atribut)
+                .WithMany(a => a.ArtikliAtributa)
+                .HasForeignKey(aa => aa.PkFkAtributId);
+
+        }
+
+    }
+}
