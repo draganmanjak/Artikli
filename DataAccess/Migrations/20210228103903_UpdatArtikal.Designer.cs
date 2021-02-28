@@ -4,14 +4,16 @@ using DataAccess;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace DataAccess.Migrations
 {
     [DbContext(typeof(DataAccessContext))]
-    partial class DataAccessContextModelSnapshot : ModelSnapshot
+    [Migration("20210228103903_UpdatArtikal")]
+    partial class UpdatArtikal
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -27,6 +29,7 @@ namespace DataAccess.Migrations
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
                     b.Property<long?>("FkJedinicaMjereId")
+                        .IsRequired()
                         .HasColumnType("bigint");
 
                     b.Property<string>("Naziv")
@@ -138,7 +141,9 @@ namespace DataAccess.Migrations
                 {
                     b.HasOne("DataAccess.Infrastructure.Models.JediniceMjere", "JedinicaMjere")
                         .WithMany()
-                        .HasForeignKey("FkJedinicaMjereId");
+                        .HasForeignKey("FkJedinicaMjereId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("JedinicaMjere");
                 });

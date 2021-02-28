@@ -1,4 +1,5 @@
 ﻿using Artikli.ViewModels;
+using Artikli.ViewModels.Models;
 using AutoMapper;
 using DataAccess;
 using DataAccess.Infrastructure.Models;
@@ -31,6 +32,82 @@ namespace Artikli.Controllers
             _unitOfWork = unitOfWork;
               _context =context;
         }
+
+
+        [HttpGet("{id}")]
+        public async Task<IActionResult> Get(long id)
+        {
+            ServiceResponse<ArtikliViewModel> response = new ServiceResponse<ArtikliViewModel>();
+            try
+            {
+
+          
+            ArtikliModel artikal = await _context.Artikli.Where(a => a.PkArtikliId == id).FirstOrDefaultAsync();
+            if (artikal == null)
+            {
+                return BadRequest(new { Message = "Requested item not exists" });
+            }
+            ArtikliViewModel viewModel = _mapper.Map<ArtikliViewModel>(artikal);
+
+                List<Atributi> atributi = await _context.Atributi.Where(a => a.ArtikliAtributa.Any(aa => aa.PkFkArtikalId == viewModel.PkArtikliId)).ToListAsync();
+            viewModel.AtributiArtikla = _mapper.Map < List<AtributiViewModel>>(atributi);
+
+            foreach(AtributiViewModel atribut in viewModel.AtributiArtikla)
+            {
+               AtributiArtikla atrArt = await _context.AtributiArtikla.Where(aa => aa.PkFkArtikalId == artikal.PkArtikliId && aa.PkFkAtributId==atribut.PkAtributId).FirstOrDefaultAsync();
+               atribut.Value = atrArt.Value;
+           
+             }
+           
+            JediniceMjere jedinicaMjere = await _context.JediniceMjere.Where(x => x.PkJedinicaMjereId == viewModel.FkJedinicaMjereId).FirstOrDefaultAsync();
+            viewModel.JedinicaMjere = jedinicaMjere?.Naziv;
+
+                response.Model = viewModel;
+                response.Success = true;
+                response.Message = "Uspješno";
+            }
+            catch(Exception e)
+            { 
+            
+                response.Success = false;
+                response.Message = e.Message;
+            }
+            return Ok(new { response });
+        }
+        [HttpPut]
+        public async Task<IActionResult> Put(ArtikliViewModel model)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(new { Message = "Model is not valid" });
+            }
+            ServiceResponse<string> response = new ServiceResponse<string>();
+            ArtikliModel artikal = _context.Artikli.Find(model.PkArtikliId);
+            artikal.Naziv = model.Naziv;
+            artikal.Sifra = model.Sifra;
+            artikal.FkJedinicaMjereId = model.FkJedinicaMjereId;
+            _context.Artikli.Update(artikal);
+            await _context.SaveChangesAsync();
+            foreach (var item in model.AtributiArtiklaViewModelList)
+            {
+                AtributiArtikla atrArt = _context.AtributiArtikla.Find(model.PkArtikliId, item.PkFkAtributId);
+                if(atrArt != null)
+                {
+                     atrArt.Value = item.Value;
+                    _context.AtributiArtikla.Update(atrArt);
+                }
+                else
+                {
+                    item.PkFkArtikalId = model.PkArtikliId;
+                    _context.AtributiArtikla.Add(_mapper.Map<AtributiArtikla>(item));
+                }
+          
+            }
+            await _context.SaveChangesAsync();
+            response.Success = true;
+            response.Message = "Uspješno";
+            return Ok(response);
+        }
         [HttpPost]
         public async Task<IActionResult> Post(ArtikliViewModel model)
         {
@@ -52,6 +129,39 @@ namespace Artikli.Controllers
             response.Success = true;
             response.Message = "Uspješno";
             return Ok(response);
+        }
+
+        [HttpDelete]
+        [Route("{id}")]
+        public async Task<IActionResult> Delete(long id)
+        {
+            var artikal = await _context.Artikli.Where(a => a.PkArtikliId == id).FirstOrDefaultAsync();
+            ServiceResponse<ArtikliViewModel> response = new ServiceResponse<ArtikliViewModel>();
+            try
+            {
+
+                if (artikal == null)
+            {
+                return BadRequest("Language not exists");
+            }
+            List<AtributiArtikla> atributiArtikla = await _context.AtributiArtikla.Where(a => a.PkFkArtikalId==artikal.PkArtikliId).ToListAsync();
+            foreach (AtributiArtikla atributArtikla in atributiArtikla)
+            {
+                _context.AtributiArtikla.Remove(atributArtikla);
+
+            }
+            _context.Artikli.Remove(artikal);
+            await _context.SaveChangesAsync();
+                response.Success = true;
+                response.Message = "Uspješno";
+            }
+            catch (Exception e)
+            {
+
+                response.Success = false;
+                response.Message = e.Message;
+            }
+            return Ok(new { response });
         }
 
         [HttpPost]
@@ -78,8 +188,21 @@ namespace Artikli.Controllers
             {
                 JediniceMjere jedinicaMjere = await _context.JediniceMjere.Where(x => x.PkJedinicaMjereId == art.FkJedinicaMjereId).FirstOrDefaultAsync();
                 art.JedinicaMjere = jedinicaMjere?.Naziv;
+
+                List<Atributi> atributi = await _context.Atributi.Where(a => a.ArtikliAtributa.Any(aa => aa.PkFkArtikalId == art.PkArtikliId)).ToListAsync();
+                art.AtributiArtikla = _mapper.Map<List<AtributiViewModel>>(atributi);
+
+                foreach (AtributiViewModel atribut in art.AtributiArtikla)
+                {
+                    AtributiArtikla atrArt = await _context.AtributiArtikla.Where(aa => aa.PkFkArtikalId == art.PkArtikliId && aa.PkFkAtributId == atribut.PkAtributId).FirstOrDefaultAsync();
+                    atribut.Value = atrArt.Value;
+
+                }
             }
-            return Ok(new { artikli = _mapper.Map<List<ArtikliViewModel>>(paginated), PageNum = paginated.PageIndex, totalPages=artikli.Count() });
+
+
+
+            return Ok(new { artikli = list, PageNum = paginated.PageIndex, totalPages=artikli.Count() });
         }
 
     }

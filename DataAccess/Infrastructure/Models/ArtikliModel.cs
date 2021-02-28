@@ -16,8 +16,8 @@ namespace DataAccess.Infrastructure.Models
         public string Naziv { get; set; }
         [Required]
         public string Sifra { get; set; }
-        [Required]
-        public long FkJedinicaMjereId { get; set; }
+
+        public long? FkJedinicaMjereId { get; set; }
         [ForeignKey("FkJedinicaMjereId")]
         public JediniceMjere JedinicaMjere { get; set; }
 

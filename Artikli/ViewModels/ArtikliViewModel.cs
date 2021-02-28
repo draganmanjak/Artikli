@@ -1,4 +1,5 @@
-﻿using DataAccess.Infrastructure.Models;
+﻿using Artikli.ViewModels.Models;
+using DataAccess.Infrastructure.Models;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -17,11 +18,11 @@ namespace Artikli.ViewModels
         public string Sifra { get; set; }
         [Required]
         public double Cijena { get; set; }
-        [Required]
-        public long FkJedinicaMjereId { get; set; }
+
+        public long? FkJedinicaMjereId { get; set; }
         public string JedinicaMjere { get; set; }
 
-        public ICollection<Atributi> AtributiArtikla { get; set; }
+        public ICollection<AtributiViewModel> AtributiArtikla { get; set; }
         public ICollection<AtributiArtiklaViewModel> AtributiArtiklaViewModelList { get; set; }
     }
 }

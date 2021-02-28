@@ -16,6 +16,9 @@ namespace Artikli.ViewModels.Models
 
         public string JedinicaMjere { get; set; }
 
+        public string Value { get; set; }
+
+
 
     }
 }
