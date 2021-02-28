@@ -13,6 +13,8 @@ namespace DataAccess.Infrastructure.Services
        
         public ArtikliRepository(DataAccessContext context) : base(context)
         {
+
+
         }
 
 
