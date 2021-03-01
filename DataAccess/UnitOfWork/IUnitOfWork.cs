@@ -9,8 +9,11 @@ namespace DataAccess.UnitOfWork
    public interface IUnitOfWork : IDisposable
     {
         IArtikliRepository Artiklis { get; }
-        IAtributiArtiklaRepository AtributiArtiklas { get; }
+        IAtributiRepository Atributis { get; }
+        IJediniceMjereRepository JediniceMjeres { get; }
 
+
+        IAtributiArtiklaRepository AtributiArtiklas { get; }
 
         Task<int> Complete();
     }

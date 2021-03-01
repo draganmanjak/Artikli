@@ -5,6 +5,17 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Profiles\**" />
+    <Compile Remove="ViewModels\**" />
+    <Content Remove="Profiles\**" />
+    <Content Remove="ViewModels\**" />
+    <EmbeddedResource Remove="Profiles\**" />
+    <EmbeddedResource Remove="ViewModels\**" />
+    <None Remove="Profiles\**" />
+    <None Remove="ViewModels\**" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="AutoMapper" Version="10.1.1" />
     <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="8.1.1" />
     <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="5.0.3" />

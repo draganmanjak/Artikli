@@ -46,13 +46,13 @@ namespace DataAccess.UserManagement.Services
         {
             using (var hmac = new System.Security.Cryptography.HMACSHA512(passwordSalt))
             {
-                var computedHash = hmac.ComputeHash(System.Text.Encoding.UTF8.GetBytes(password)); // Create hash using password salt.
+                var computedHash = hmac.ComputeHash(System.Text.Encoding.UTF8.GetBytes(password));
                 for (int i = 0; i < computedHash.Length; i++)
-                { // Loop through the byte array
-                    if (computedHash[i] != passwordHash[i]) return false; // if mismatch
+                { 
+                    if (computedHash[i] != passwordHash[i]) return false; 
                 }
             }
-            return true; //if no mismatches.
+            return true; 
         }
         public async  Task<ServiceResponse<ApplicationUser>> Register(ApplicationUser user, string password)
         {

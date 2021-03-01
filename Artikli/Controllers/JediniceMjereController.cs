@@ -1,7 +1,8 @@
-﻿using Artikli.ViewModels;
+﻿
 using AutoMapper;
 using DataAccess;
 using DataAccess.Infrastructure.Models;
+using DataAccess.Infrastructure.ViewModels;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;

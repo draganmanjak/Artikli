@@ -1,7 +1,9 @@
-﻿using Artikli.ViewModels.Models;
+﻿
 using AutoMapper;
 using DataAccess;
 using DataAccess.Infrastructure.Models;
+using DataAccess.Infrastructure.ViewModels;
+using DataAccess.UnitOfWork;
 using DataAccess.UserManagement.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
@@ -19,13 +21,17 @@ namespace Artikli.Controllers
     [ApiController]
     public class AtributiController : ControllerBase
     {
-        private readonly DataAccessContext _context;
+        private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
-
-        public AtributiController(DataAccessContext context, IMapper mapper)
+        public AtributiController(IUnitOfWork unitOfWork)
         {
-            _mapper = mapper;
-            _context = context;
+            _unitOfWork = unitOfWork;
+            var config = new MapperConfiguration(cfg =>
+            {
+                cfg.CreateMap<Atributi, AtributiViewModel>().ReverseMap();
+
+            });
+            _mapper = config.CreateMapper();
         }
 
         [HttpPost]
@@ -36,9 +42,9 @@ namespace Artikli.Controllers
                 return BadRequest(new { Message = "Model is not valid" });
             }
             ServiceResponse<string> response = new ServiceResponse<string>();
-               Atributi atribut = _mapper.Map<Atributi>(model);
-            _context.Atributi.Add(atribut);
-            await _context.SaveChangesAsync();
+            Atributi atribut = _mapper.Map<Atributi>(model);
+            _unitOfWork.Atributis.Add(atribut);
+            await _unitOfWork.Complete();
             response.Success = true;
             response.Message = "Uspješno";
             return Ok(response);
@@ -48,12 +54,12 @@ namespace Artikli.Controllers
         [Route("get-all-atributes")]
         public async Task<IActionResult> GetAllAtributes()
         {
-            List<Atributi> atributi = await _context.Atributi.ToListAsync();
-          
-                List<AtributiViewModel> list = _mapper.Map<List<AtributiViewModel>>(atributi);
+            List<Atributi> atributi = await _unitOfWork.Atributis.GetAll().ToListAsync();
+            List<AtributiViewModel> list = _mapper.Map<List<AtributiViewModel>>(atributi);
             foreach (AtributiViewModel atr in list)
             {
-                JediniceMjere jedinicaMjere = await _context.JediniceMjere.Where(x => x.PkJedinicaMjereId == atr.FkJedinicaMjereId).FirstOrDefaultAsync();
+                JediniceMjere jedinicaMjere = await 
+                 _unitOfWork.JediniceMjeres.Find(x => x.PkJedinicaMjereId == atr.FkJedinicaMjereId).FirstOrDefaultAsync();
                 atr.JedinicaMjere = jedinicaMjere?.Naziv;
             }
        

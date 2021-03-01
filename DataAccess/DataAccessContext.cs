@@ -1,4 +1,5 @@
 ﻿using DataAccess.Infrastructure.Models;
+using DataAccess.Infrastructure.ViewModels;
 using DataAccess.UserManagement.Models;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -25,7 +26,15 @@ namespace DataAccess
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-       
+            modelBuilder.Ignore<ArtikliSearchViewModel>();
+            modelBuilder.Ignore<ArtikliViewModel>();
+            modelBuilder.Ignore<AtributiArtiklaViewModel>();
+            modelBuilder.Ignore<AtributiViewModel>();
+            modelBuilder.Ignore<AtributKeyValueModel>();
+            modelBuilder.Ignore<JediniceMjereViewModel>();
+            modelBuilder.Ignore<PaginatedListViewModel>();
+
+
 
             // Artikli i Atributi više na više
             modelBuilder.Entity<AtributiArtikla>()

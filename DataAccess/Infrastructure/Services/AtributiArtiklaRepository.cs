@@ -1,4 +1,5 @@
-﻿using DataAccess.Infrastructure.Generic;
+﻿using AutoMapper;
+using DataAccess.Infrastructure.Generic;
 using DataAccess.Infrastructure.Interfaces;
 using DataAccess.Infrastructure.Models;
 using System;

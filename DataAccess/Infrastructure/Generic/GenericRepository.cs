@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using AutoMapper;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,6 +11,7 @@ namespace DataAccess.Infrastructure.Generic
     public class GenericRepository<T> : IGenericRepository<T> where T : class
     {
         protected readonly DataAccessContext _context;
+
         public GenericRepository(DataAccessContext context)
         {
             _context = context;

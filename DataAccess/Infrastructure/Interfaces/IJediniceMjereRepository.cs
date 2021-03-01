@@ -6,9 +6,7 @@ using System.Text;
 
 namespace DataAccess.Infrastructure.Interfaces
 {
-    public interface IAtributiArtiklaRepository : IGenericRepository<AtributiArtikla>
+    public interface IJediniceMjereRepository : IGenericRepository<JediniceMjere>
     {
-
-
     }
 }

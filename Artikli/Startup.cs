@@ -1,4 +1,4 @@
-using Artikli.Profiles;
+
 using AutoMapper;
 using DataAccess.Extensions;
 using DataAccess.Infrastructure.Generic;
