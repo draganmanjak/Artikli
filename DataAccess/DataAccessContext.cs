@@ -33,8 +33,12 @@ namespace DataAccess
             modelBuilder.Ignore<AtributKeyValueModel>();
             modelBuilder.Ignore<JediniceMjereViewModel>();
             modelBuilder.Ignore<PaginatedListViewModel>();
-
-
+            modelBuilder.Entity<JediniceMjere>().HasData(
+                new { Naziv="kg"},
+                new { Naziv = "l" },
+                new { Naziv = "m" },
+                new { Naziv = "cm" },
+                new { Naziv = "dm" });
 
             // Artikli i Atributi više na više
             modelBuilder.Entity<AtributiArtikla>()
