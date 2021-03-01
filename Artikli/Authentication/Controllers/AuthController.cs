@@ -19,10 +19,15 @@ namespace Artikli.Authentication.Controllers
     {
         private readonly IAuthRepository _authRepository;
         private readonly IMapper _mapper;
-        public AuthController(IAuthRepository authRepository, IMapper mapper)
+        public AuthController(IAuthRepository authRepository)
         {
             _authRepository = authRepository;
-            _mapper = mapper;
+            var config = new MapperConfiguration(cfg =>
+            {
+                cfg.CreateMap<ApplicationUser, UserViewModel>().ReverseMap();
+
+            });
+            _mapper = config.CreateMapper();
         }
         [AllowAnonymous]
         [HttpPost("Login")]

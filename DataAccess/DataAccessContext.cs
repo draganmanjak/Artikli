@@ -34,7 +34,7 @@ namespace DataAccess
             modelBuilder.Ignore<JediniceMjereViewModel>();
             modelBuilder.Ignore<PaginatedListViewModel>();
             modelBuilder.Entity<JediniceMjere>().HasData(
-                 new { PkJedinicaMjereId =(long) 1, Naziv = "kg" },
+                new { PkJedinicaMjereId =(long) 1, Naziv = "kg" },
                 new { PkJedinicaMjereId = (long)2, Naziv = "l" },
                 new { PkJedinicaMjereId = (long)3, Naziv = "m" },
                 new { PkJedinicaMjereId = (long)4, Naziv = "cm" },
