@@ -34,11 +34,11 @@ namespace DataAccess
             modelBuilder.Ignore<JediniceMjereViewModel>();
             modelBuilder.Ignore<PaginatedListViewModel>();
             modelBuilder.Entity<JediniceMjere>().HasData(
-                 new { PkJedinicaMjereId = 1, Naziv = "kg" },
-                new { PkJedinicaMjereId = 2, Naziv = "l" },
-                new { PkJedinicaMjereId = 3, Naziv = "m" },
-                new { PkJedinicaMjereId = 4, Naziv = "cm" },
-                new { PkJedinicaMjereId = 5, Naziv = "dm" });
+                 new { PkJedinicaMjereId =(long) 1, Naziv = "kg" },
+                new { PkJedinicaMjereId = (long)2, Naziv = "l" },
+                new { PkJedinicaMjereId = (long)3, Naziv = "m" },
+                new { PkJedinicaMjereId = (long)4, Naziv = "cm" },
+                new { PkJedinicaMjereId = (long) 5, Naziv = "dm" });
             // Artikli i Atributi više na više
             modelBuilder.Entity<AtributiArtikla>()
                  .HasKey(a => new { a.PkFkArtikalId, a.PkFkAtributId });
